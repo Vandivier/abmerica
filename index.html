@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <!-- ref: https://bl.ocks.org/mbostock/4657115 -->
+<!-- D3 Google protip...it's called a choropleth -->
 <style>
 
 path {
@@ -32,9 +33,9 @@ path {
 
 </style>
 <body>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script src="//d3js.org/queue.v1.min.js"></script>
-<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 <script>
 
 var width = 960,
@@ -51,9 +52,10 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+    //I mean, you can do this the right way and set up a localhost which serves it but why. Just go to GitHub for now.
 queue()
-    .defer(d3.json, "/mbostock/raw/4090846/us.json")
-    .defer(d3.json, "/mbostock/raw/4090846/us-congress-113.json")
+    .defer(d3.json, "./data/us.json")
+    .defer(d3.json, "./data/us-congress-113.json")
     .await(ready);
 
 function ready(error, us, congress) {
