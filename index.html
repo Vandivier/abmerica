@@ -54,8 +54,8 @@ var svg = d3.select("body").append("svg")
 
     //I mean, you can do this the right way and set up a localhost which serves it but why. Just go to GitHub for now.
 queue()
-    .defer(d3.json, "./data/us.json")
-    .defer(d3.json, "./data/us-congress-113.json")
+    .defer(d3.json, "https://raw.githubusercontent.com/Vandivier/abmerica/master/data/us.json")
+    .defer(d3.json, "https://raw.githubusercontent.com/Vandivier/abmerica/master/data/us-congress-113.json")
     .await(ready);
 
 function ready(error, us, congress) {
