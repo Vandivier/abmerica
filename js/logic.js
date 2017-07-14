@@ -5,11 +5,11 @@ var sugar           =   Array(cntX*cntY);
 var sugarProduction =   Array(cntX*cntY);
 var sugarCapacity   =   Array(cntX*cntY);
 var hasAgent        =   Array(cntX*cntY);
-var agentCnt        =   250;
+var initAgentCnt    =   250;
 var maxSugar        =   30;
 var maxProduction   =   1;
-var agents          =   Array(agentCnt);
 var fps             =   3;
+var agents, agentCnt;
 
 //--------------------------agent constant------------------------
 var visionRange     =   6;
@@ -17,6 +17,8 @@ var harvestRange    =   10;
 var consumeRange    =   8;
 var capacityRange   =   30;
 var initSugarRange  =   15;
+var ageRange        =   100;
+var lifeExpectancy  =   80;
 
 //--------------------------sugar mine----------------------------
 var sugarMineA = {
@@ -59,7 +61,7 @@ function test_init_sugar_sugarMine()
         }
     }
 }
-function test_init_sugar()
+function initSugar()
 {
     test_init_sugar_sugarMine();         
 }
@@ -70,7 +72,7 @@ function test_init_hasAgent()
         hasAgent[i] = false;
 }
 
-function test_init_agent()
+function initAgents()
 {
     pos_arr = init_postion();
     for (var i=0; i<agents.length; i++) {
@@ -82,6 +84,7 @@ function test_init_agent()
         var consume     = Math.floor(Math.random()*(consumeRange-1))+1; //at least 1
         var capacity    = Math.floor(Math.random()*capacityRange);
         var initSugar   = Math.floor(Math.random()*initSugarRange);
+        var initAge     = Math.floor(Math.random()*(ageRange-1))+1; //at least 1
 
         agents[i] = 
             new Agent(x, y, 
@@ -89,24 +92,26 @@ function test_init_agent()
                 harvest,
                 consume,
                 capacity,
-                initSugar);
+                initSugar,
+                initAge);
         hasAgent[pos] = true;
     }
 }
 
-// process tick
+// this is the loop.
+// process tick, and set timeout for the next tick
 function process_one_frame()
 {
     process_one_frame_agent();
     draw();
     product_sugar();
-    setTimeout(process_one_frame, 1000/fps);
+    var loop = setTimeout(process_one_frame, 1000/fps);
 }
 
 function process_one_frame_agent()
 {
     for (var i=0; i<agents.length; i++) {
-        if (!agents[i].Consume()) {
+        if (!agents[i].Consume() || agents[i].DiesFromOldAge()) {
             agents[i] = agents[agents.length-1];
             i--;
             agents.pop();
@@ -115,6 +120,7 @@ function process_one_frame_agent()
         else {
             agents[i].Harvest();
             agents[i].Migrate();
+            agents[i].Age();
         }
     }
 }
@@ -124,10 +130,10 @@ function process_one_frame_sugar()
    product_sugar();   
 }
 
-function test_draw_grid()
+function drawGrid()
 {
-    test_init_sugar();
-    test_init_agent();
+    initSugar();
+    initAgents();
     drawSugar(sugar, maxSugar);
     drawAgents();  
     process_one_frame();
@@ -170,7 +176,19 @@ function product_sugar()
     for (var i=0; i<sugar.length; i++) 
         sugar[i] = Math.min(sugarCapacity[i], sugar[i]+sugarProduction[i]);
 }
+
+// https://stackoverflow.com/questions/26271868/is-there-a-simpler-way-to-implement-a-probability-function-in-javascript
+// return true with (n/1) probability
+function probability(n) {
+  return !!n && Math.random() <= n;
+}
 //--------------------------------------------------------------
 
-setCanvas();
-test_draw_grid();
+function initModel() {
+  agentCnt = initAgentCnt;
+  agents = Array(agentCnt);
+  setCanvas();
+  drawGrid();
+}
+
+initModel();

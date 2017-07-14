@@ -6,8 +6,6 @@ var lineWidth = 1;
 var halfLineWidth = lineWidth/2;
 var halfUnit = unit/2;
 var fullRadius = halfUnit-lineWidth;
-var sugarColor = 'yellow';
-var agentColor = 'blue';
 
 function setCanvas()
 {
@@ -51,7 +49,7 @@ function drawSugar(src, max)
         var cx = j*unit+halfUnit, cy = i*unit+halfUnit;
         ctx.clearRect(j*unit, i*unit, unit, unit);
         var blue = 255-Math.floor(Math.min(max, src[idx])/max*255);
-        var color = 'rgb(255,255,'+blue+')';
+        var color = 'rgb(255, 255, ' + blue + ')';
         drawCircle(cx, cy, fullRadius, color);
     }
 }
@@ -59,10 +57,16 @@ function drawSugar(src, max)
 function drawAgents()
 {
     for (var i=0; i<agents.length; i++) {
-        var x = agents[i].x, y = agents[i].y;
-        var cx = x*unit+halfUnit, cy = y*unit+halfUnit;
+        var x = agents[i].x,
+            y = agents[i].y,
+            cx = x*unit+halfUnit,
+            cy = y*unit+halfUnit,
+            _age = agents[i].age,
+            _sugarColor = agents[i].sugar * 10,
+            _agentColor = 'rgb(' + _age + ',' + _sugarColor + ', 155)';
+
         ctx.clearRect(x*unit, y*unit, unit, unit);
-        drawCircle(cx, cy, fullRadius, agentColor);
+        drawCircle(cx, cy, fullRadius, _agentColor);
     }
 }
 
