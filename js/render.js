@@ -42,24 +42,9 @@ function drawCircle(centerX, centerY, radius, color)
 
 /*
 draw the sugar,
-using radius to indicate abundance of the sugar
-*/
-function drawSugarRadius(src, max)
-{
-    for (var idx=0; idx<cntX*cntY; idx++) {
-        var i = Math.floor(idx / cntX), j = idx % cntX;
-        var cx = j*unit+halfUnit, cy = i*unit+halfUnit;
-        var radius = fullRadius*Math.min(max, src[idx])/max;
-        ctx.clearRect(j*unit, i*unit, unit, unit);
-        drawCircle(cx, cy, radius, sugarColor);
-    }
-}
-
-/*
-draw the sugar,
 using color to indicate abundance of the sugar
 */
-function drawSugarColor(src, max)
+function drawSugar(src, max)
 {
     for (var idx=0; idx<cntX*cntY; idx++) {
         var i = Math.floor(idx / cntX), j = idx % cntX;
@@ -67,20 +52,12 @@ function drawSugarColor(src, max)
         ctx.clearRect(j*unit, i*unit, unit, unit);
         var blue = 255-Math.floor(Math.min(max, src[idx])/max*255);
         var color = 'rgb(255,255,'+blue+')';
-        //var color = 'rgb('+blue+',255,255)';
         drawCircle(cx, cy, fullRadius, color);
     }
 }
 
-function drawSugar()
-{
-    //drawSugarColor(sugarProduction, maxProduction);
-    drawSugarColor(sugar, maxSugar);
-}
-
 function drawAgents()
 {
-    //alert('drawAgents');
     for (var i=0; i<agents.length; i++) {
         var x = agents[i].x, y = agents[i].y;
         var cx = x*unit+halfUnit, cy = y*unit+halfUnit;
@@ -91,6 +68,6 @@ function drawAgents()
 
 function draw()
 {
-    drawSugar();
+    drawSugar(sugar, maxSugar);
     drawAgents();
 }

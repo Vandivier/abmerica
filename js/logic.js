@@ -94,6 +94,7 @@ function test_init_agent()
     }
 }
 
+// process tick
 function process_one_frame()
 {
     process_one_frame_agent();
